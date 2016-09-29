@@ -4,7 +4,8 @@ var gm = require('gm');
 
 var app = express();
 var PORT = 3000;
-var IMG = '/tmp/testCrop/src.png';
+// var IMG = '/git/u-crop/qCad_4.png';
+var IMG = '/git/u-crop/img.jpg';
 var gmufferType = 'PNG';
 var defaultCropParams = {
   w: 100,
@@ -47,7 +48,9 @@ var crop = function (data, callback) {
       cropParams.x,
       cropParams.y
     )
-    .toBuffer(gmufferType, function (err, buffer) {
+    .setFormat('jpeg')
+    // .toBuffer(gmufferType, function (err, buffer) {
+    .toBuffer( function (err, buffer) {
         if (err) {
           callback(err);
         } else {
@@ -58,6 +61,7 @@ var crop = function (data, callback) {
 };
 
 app.get('/img', function(req, res){
+  var start = new Date();
   if (!req.query.crop) {
     res.send('ok');
   } else {
@@ -68,9 +72,10 @@ app.get('/img', function(req, res){
       },
       function (err, img) {
         if (err) console.log('err', err);
-        res.set( 'Content-Type', 'image/png' );
-        // res.set( 'Content-Type', 'image/jpeg' );
+        // res.set( 'Content-Type', 'image/png' );
+        res.set( 'Content-Type', 'image/jpeg' );
         res.send(img);
+        console.log((new Date() - start) / 1000 % 60 );
       }
     );
   }
@@ -78,7 +83,11 @@ app.get('/img', function(req, res){
 
 app.get('/', function(req, res){
 
-  res.send('<img src="/img?crop=400,500,400,400" />');
+  res.send(
+    'Схема целиком: <a href="/img?crop=0,0,22000,22000" target="_blank">клик!</a>' +
+    '<br/><br/>Кусок из схемы:<br/>' +
+    '<img src="/img?crop=9880,5820,500,500" />'
+  );
 
 });
 
