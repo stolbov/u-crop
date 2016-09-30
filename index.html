@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+      canvas {
+        border: 1px solid #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="500" height="500"></canvas>
+    <script>
+      var start = new Date();
+      var w = 500;
+      var h = 500;
+      var canvas = document.getElementById('myCanvas');
+      canvas.width = w;
+      canvas.height = h;
+      var context = canvas.getContext('2d');
+      var imageObj = new Image();
+
+      imageObj.onload = function() {
+        var end1 = new Date();
+        console.log((end1 - start) / 1000 % 60 );
+        // draw cropped image
+        var sourceX = 9880;
+        var sourceY = 5820;
+
+
+        context.drawImage(imageObj, sourceX, sourceY, w, h, 0, 0, w, h);
+        console.log((new Date() - end1) / 1000 % 60 );
+      };
+      imageObj.src = 'http://localhost:3000/img?crop=0,0,22000,22000';
+    </script>
+  </body>
+</html>

@@ -4,15 +4,17 @@ var gm = require('gm');
 
 var app = express();
 var PORT = 3000;
-// var IMG = '/git/u-crop/qCad_4.png';
-var IMG = '/git/u-crop/img.jpg';
+var IMG = '/git/u-crop/qCad.jpg';
+// var IMG = '/git/u-crop/img.jpg';
 var gmufferType = 'PNG';
 var defaultCropParams = {
-  w: 100,
-  h: 100,
+  w: 700,
+  h: 700,
   x: 0,
   y: 0,
 };
+
+var IMG_BUFFER;
 
 var getParams = function (data) {
   var params = {};
@@ -41,7 +43,7 @@ var getParams = function (data) {
 
 var crop = function (data, callback) {
   var cropParams = getParams(data.params || []);
-  gm(data.img)
+  gm(IMG_BUFFER)
     .crop(
       cropParams.w,
       cropParams.h,
@@ -91,6 +93,15 @@ app.get('/', function(req, res){
 
 });
 
-app.listen(PORT, function () {
-    console.log('listening on port ' + PORT + '...');
+console.log('start load image...');
+fs.readFile(IMG, function (err, img) {
+  if (err) {
+    console.log('error image loading:', err);
+  } else {
+    console.log('Image is loading success!');
+    IMG_BUFFER = img;
+    app.listen(PORT, function () {
+        console.log('Server listening on port ' + PORT + '...');
+    });
+  }
 });
